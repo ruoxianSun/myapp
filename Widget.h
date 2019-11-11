@@ -24,13 +24,11 @@ public:
         return this->grab(this->rect()).toImage();
     }
 protected:
-    void paintEvent(QPaintEvent *event)
-    {
-        QPainter painter(this);
-        painter.drawText(this->rect(),"hello world");
-    }
+    void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
 private:
     Ui::Widget *ui;
+    QString info;
 };
 
 #endif // WIDGET_H

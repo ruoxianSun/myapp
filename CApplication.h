@@ -25,7 +25,7 @@ public:
     CDrawApplication()
     {
         _window=new Widget;
-        _window->resize(100,100);
+        _window->resize(800,600);
         _window->show();
     }
     virtual QWidget*view(){

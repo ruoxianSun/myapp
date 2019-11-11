@@ -1,54 +1,77 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-         //使用qwebchannel.js
-        <script type="text/javascript" src="./qwebchannel.js"></script>
         <script type="text/javascript">
-            //BEGIN SETUP
-            function output(message) {
-                var output = document.getElementById("output");
-                output.innerHTML = output.innerHTML + message + "\n";
-            }
-            window.onload = function() {
+
+            window.onload = function () {
                 var baseUrl = "ws://localhost:8888";
-
-                output("Connecting to WebSocket server at " + baseUrl + ".");
+                console.log("Connecting to WebSocket server at " + baseUrl + ".");
                 var socket = new WebSocket(baseUrl);
-
-                socket.onclose = function() {
+                socket.onclose = function () {
                     console.error("web channel closed");
                 };
-                socket.onerror = function(error) {
+                socket.onerror = function (error) {
                     console.error("web channel error: " + error);
                 };
-                socket.onopen = function() {
-                    output("WebSocket connected, setting up QWebChannel.");
+                socket.onopen = function () {
+                    console.log("WebSocket connected, setting up QWebChannel.");
+                }
+                function sendJson(obj) {
+                    var content = JSON.stringify(obj);
+                    socket.send(content);
+                };
+                var canvase = document.getElementById("canvase");
+                canvase.style.width = document.body.innerHTML.width;
+                canvase.style.height = document.body.innerHTML.height;
+                console.log("canvase size", canvase);
+                canvase.onmousedown = function (ev) {
+
+                    var content = {
+                        "uri": "app.protocol.mouseevent",
+                        "type": "mousedown",
+                        "button": ev.button,
+                        "buttons": ev.buttons,
+                        "x": ev.x,
+                        "y": ev.y,
+                        "modifys": ev.modifys,
+                    };
+                    console.log("onmousedown".content);
+                    sendJson(content);
+                }
+                canvase.onmousemove = function (ev) {
+                    var content = {
+                        "uri": "app.protocol.mouseevent",
+                        "type": "mousemove",
+                        "button": ev.button,
+                        "buttons": ev.buttons,
+                        "x": ev.x,
+                        "y": ev.y,
+                        "modifys": ev.modifys,
+                    };
+                    console.log("onmousemove".content);
+                    //sendJson(content);
+                }
+                canvase.onmouseup = function (ev) {
+                    var content = {
+                        "uri": "app.protocol.mouseevent",
+                        "type": "mouseup",
+                        "button": ev.button,
+                        "buttons": ev.buttons,
+                        "x": ev.x,
+                        "y": ev.y,
+                        "modifys": ev.modifys,
+                    };
+                    console.log("onmouseup".content);
+                    sendJson(content);
                 }
             }
-            //END SETUP
         </script>
-        <style type="text/css">
-            html {
-                height: 100%;
-                width: 100%;
-            }
-            #input {
-                width: 400px;
-                margin: 0 10px 0 0;
-            }
-            #send {
-                width: 90px;
-                margin: 0;
-            }
-            #output {
-                width: 500px;
-                height: 300px;
-            }
-        </style>
     </head>
     <body>
-        <textarea id="output"></textarea><br />
-        <input id="input" /><input type="submit" id="send" value="Send" onclick="javascript:click();" />
+        <div id="canvase" style="border:1px;border-color:black;width:800px;height:600px;">
+
+        </div>
+        
     </body>
 </html>
