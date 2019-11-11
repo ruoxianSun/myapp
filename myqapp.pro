@@ -25,14 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        CAppProtocol.cpp \
         CApplication.cpp \
+        CDrawProtocol.cpp \
+        CMouseProtocol.cpp \
+        CResizeProtocol.cpp \
         CWebProtocol.cpp \
         CWebServer.cpp \
         main.cpp \
         Widget.cpp
 
 HEADERS += \
+        CAppProtocol.h \
         CApplication.h \
+        CDrawProtocol.h \
+        CMouseProtocol.h \
+        CResizeProtocol.h \
         CWebProtocol.h \
         CWebServer.h \
         Widget.h

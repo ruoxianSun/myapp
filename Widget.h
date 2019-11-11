@@ -14,18 +14,17 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
-
-    void resize(int w, int h)
-    {
-        QWidget::resize(w,h);
-    }
     QImage getPicture()
     {
         return this->grab(this->rect()).toImage();
     }
 protected:
-    void paintEvent(QPaintEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent*e);
+    void paintEvent(QPaintEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent*e);
+    void mouseMoveEvent(QMouseEvent*e);
+    void wheelEvent(QWheelEvent*e);
 private:
     Ui::Widget *ui;
     QString info;

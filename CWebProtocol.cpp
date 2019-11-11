@@ -2,31 +2,29 @@
 #include <QApplication>
 CApplication*CWebProtocol::_app=0;
 
-QVariant CAppProtocol::getSharedObject(const QString &key)
+
+
+
+
+void CWebProtocol::send(const QString &data)
 {
-    return _coreProtocol->getSharedObject(key);
+    _transport->sendTextMessage(data);
 }
 
-void CMouseProtocol::Process(const QVariantMap &map){
-    if(!map.contains("uri"))return;
-    if(!map["uri"].toByteArray().contains("app.protocol.mouseevent"))return;
-    if(!map.contains("type"))return;
-    QByteArray type=map["type"].toByteArray();
-    int x=map["x"].toInt();
-    int y=map["y"].toInt();
-    int button=map["button"].toInt();
-    int buttons=map["buttons"].toInt();
-    int modifys=map["modifys"].toInt();
+void CWebProtocol::onTextReceived(const QString &data)
+{
+    qDebug()<<"text received:"<<data;
 
-    if(type=="mousedown")
+    QJsonParseError json_error;
+    QJsonDocument jsonDoc(QJsonDocument::fromJson(data.toLocal8Bit(), &json_error));
+    if(json_error.error != QJsonParseError::NoError)
     {
-        QMouseEvent e(QEvent::MouseButtonPress,
-                      QPoint(x,y),
-                      (Qt::MouseButton)button,
-                      (Qt::MouseButtons)buttons,
-                      (Qt::KeyboardModifier)modifys);
-        QVariant v=getSharedObject("app");
-        CApplication* app=v.value<CApplication*>();
-        QApplication::sendEvent(app->view(),&e);
+        qDebug() << "json error!";
+        return;
+    }
+    QJsonObject rootObj = jsonDoc.object();
+    foreach (CAppProtocol*cap, _protocols)
+    {
+        cap->Process(rootObj.toVariantMap());
     }
 }

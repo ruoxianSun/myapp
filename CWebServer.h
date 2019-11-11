@@ -5,6 +5,7 @@
 #include <QWebSocketServer>
 #include "CWebProtocol.h"
 #include <QDebug>
+
 class CWebServer : public QObject
 {
     Q_OBJECT

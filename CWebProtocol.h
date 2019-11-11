@@ -9,22 +9,8 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-class CWebProtocol;
-class CAppProtocol:public QObject
-{
-    Q_OBJECT
-public:
-    virtual void Process(const QVariantMap&map){}
-    virtual QVariant getSharedObject(const QString&key);
-public:
-    CWebProtocol*_coreProtocol;
-};
-class CMouseProtocol:public CAppProtocol
-{
-    Q_OBJECT
-public:
-    virtual void Process(const QVariantMap&map);
-};
+#include "CMouseProtocol.h"
+#include "CResizeProtocol.h"
 class CWebProtocol : public QObject
 {
     Q_OBJECT
@@ -37,6 +23,8 @@ public:
         QVariant v;
         v.setValue<CApplication*>(app);
         setSharedObject("app",v);
+        registerAppProtocol(new CMouseProtocol);
+        registerAppProtocol(new CResizeProtocol);
     }
     virtual ~CWebProtocol()
     {
@@ -84,7 +72,7 @@ public:
         connect(transport,SIGNAL(binaryMessageReceived(QByteArray)),
                 this,SLOT(onBinaryReceived(QByteArray)));
     }
-
+    virtual void send(const QString&data);
 signals:
 
 public slots:
@@ -102,23 +90,7 @@ public slots:
     {
         qDebug()<<"binary received:"<<data;
     }
-    void onTextReceived(const QString&data)
-    {
-        qDebug()<<"text received:"<<data;
-
-        QJsonParseError json_error;
-        QJsonDocument jsonDoc(QJsonDocument::fromJson(data.toLocal8Bit(), &json_error));
-        if(json_error.error != QJsonParseError::NoError)
-        {
-            qDebug() << "json error!";
-            return;
-        }
-        QJsonObject rootObj = jsonDoc.object();
-        foreach (CAppProtocol*cap, _protocols)
-        {
-            cap->Process(rootObj.toVariantMap());
-        }
-    }
+    void onTextReceived(const QString&data);
 protected:
     QVariantMap _sharedObjects;
     QList<CAppProtocol*> _protocols;

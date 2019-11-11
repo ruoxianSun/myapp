@@ -2,9 +2,19 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script type="text/javascript">
-
+     <style>
+         body.noscroll{
+             position: fixed; 
+             overflow-y: scroll;
+             width: 100%;
+         }
+     </style>
+    </head>
+    <body>
+        <img id="myCanvas"/>
+        <script>
             window.onload = function () {
+
                 var baseUrl = "ws://localhost:8888";
                 console.log("Connecting to WebSocket server at " + baseUrl + ".");
                 var socket = new WebSocket(baseUrl);
@@ -17,15 +27,21 @@
                 socket.onopen = function () {
                     console.log("WebSocket connected, setting up QWebChannel.");
                 }
+                socket.onmessage = function (ev) {
+                    //var obj = JSON.parse(ev.data);
+                    console.log("onmessage: ", ev.data);
+                    var obj = JSON.parse(ev.data);
+                    if (obj.format === "png") {
+                        var imguri = "data:image/png;base64," + obj.data;
+                        var img = document.getElementById("myCanvas");
+                        img.src = imguri;
+                    }
+                }
                 function sendJson(obj) {
                     var content = JSON.stringify(obj);
                     socket.send(content);
                 };
-                var canvase = document.getElementById("canvase");
-                canvase.style.width = document.body.innerHTML.width;
-                canvase.style.height = document.body.innerHTML.height;
-                console.log("canvase size", canvase);
-                canvase.onmousedown = function (ev) {
+                window.onmousedown = function (ev) {
 
                     var content = {
                         "uri": "app.protocol.mouseevent",
@@ -36,10 +52,10 @@
                         "y": ev.y,
                         "modifys": ev.modifys,
                     };
-                    console.log("onmousedown".content);
+                    console.log("onmousedown ", content);
                     sendJson(content);
                 }
-                canvase.onmousemove = function (ev) {
+                window.onmousemove = function (ev) {
                     var content = {
                         "uri": "app.protocol.mouseevent",
                         "type": "mousemove",
@@ -49,10 +65,10 @@
                         "y": ev.y,
                         "modifys": ev.modifys,
                     };
-                    console.log("onmousemove".content);
+                    //console.log("onmousemove ",content);
                     //sendJson(content);
                 }
-                canvase.onmouseup = function (ev) {
+                window.onmouseup = function (ev) {
                     var content = {
                         "uri": "app.protocol.mouseevent",
                         "type": "mouseup",
@@ -62,16 +78,33 @@
                         "y": ev.y,
                         "modifys": ev.modifys,
                     };
-                    console.log("onmouseup".content);
+                    //console.log("onmouseup ",content);
+                    sendJson(content);
+                }
+                window.onwheel = function (ev) {
+
+                    var content = {
+                        "uri": "app.protocol.mouseevent",
+                        "type": "mousewheel",
+                        "buttons": ev.buttons,
+                        "x": ev.x,
+                        "y": ev.y,
+                        "delat": ev.deltaY,
+                        "modifys": ev.modifys,
+                    };
+                    console.log("onmousewheel ", ev);
+                    sendJson(content);
+                }
+                window.onresize = function (ev) {
+                    var content = {
+                        "uri": "app.protocol.resizeevent",
+                        "width": window.innerWidth,
+                        "height": window.innerHeight,
+                    };
+                    console.log("onmousewheel ", window.innerWidth, window.innerHeight);
                     sendJson(content);
                 }
             }
         </script>
-    </head>
-    <body>
-        <div id="canvase" style="border:1px;border-color:black;width:800px;height:600px;">
-
-        </div>
-        
     </body>
 </html>
