@@ -1,0 +1,13 @@
+﻿
+2019-11-14
+todo:
+1、设置网页端的分辨率与后台GUI程序窗口一致；
+2、在protocol中加入keyboard处理；
+3、封装protocol，方便前端编写；
+4、css通过js进行设置；
+5、后台GUI框架化，方便直接二次开发；
+6、试验能否压缩数据，加快图像传输显示的速度；
+
+done:
+1、websocket通信交换格式从json修改为blob; FileReader.readAsDataUrl(BlobData)可以直接将Blob格式封装成能赋值给image.src的格式;
+2、css可以实现精确的内容布局
