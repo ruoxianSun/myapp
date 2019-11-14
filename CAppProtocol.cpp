@@ -5,15 +5,18 @@
 void CAppProtocol::Process(const QVariantMap &map)
 {
     QByteArray uri=map["uri"].toByteArray();
-    QJsonObject obj;
-    obj.insert("uri",QJsonValue(uri.data()));
     QVariant v=getSharedObject("app");
     CApplication*app=v.value<CApplication*>();
-    obj.insert("format","png");
     QPixmap pixmap=app->view()->grab();
-    pixmap.save("test.png");
+#if 1
+    send(toBinary(pixmap));
+#else
+    QJsonObject obj;
+    obj.insert("uri",QJsonValue(uri.data()));
+    obj.insert("format","png");
     obj.insert("data",jsonFromPixmap(pixmap));
     send(QJsonDocument(obj));
+#endif
 }
 
 QVariant CAppProtocol::getSharedObject(const QString &key)
@@ -24,4 +27,17 @@ QVariant CAppProtocol::getSharedObject(const QString &key)
 void CAppProtocol::send(const QJsonDocument &doc)
 {
     _coreProtocol->send(QString(doc.toJson()));
+}
+
+void CAppProtocol::send(const QByteArray &data)
+{
+    _coreProtocol->send(data);
+}
+
+QByteArray CAppProtocol::toBinary(const QPixmap &p)
+{
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    p.save(&buffer, "PNG");
+    return buffer.data();
 }

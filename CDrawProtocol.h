@@ -7,7 +7,8 @@ class CDrawProtocol : public CAppProtocol
 {
     Q_OBJECT
 public:
-    virtual void Proccess(const QVariantMap&map);
+    CDrawProtocol(){_protocolID="app.protocol.draw";}
+    virtual void Process(const QVariantMap&map);
 signals:
 
 public slots:

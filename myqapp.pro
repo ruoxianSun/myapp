@@ -30,6 +30,7 @@ SOURCES += \
         CDrawProtocol.cpp \
         CMouseProtocol.cpp \
         CResizeProtocol.cpp \
+        CTest.cpp \
         CWebProtocol.cpp \
         CWebServer.cpp \
         main.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
         CDrawProtocol.h \
         CMouseProtocol.h \
         CResizeProtocol.h \
+        CTest.h \
         CWebProtocol.h \
         CWebServer.h \
         Widget.h

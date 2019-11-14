@@ -6,8 +6,8 @@
 
 void CMouseProtocol::Process(const QVariantMap &map){
     if(!map.contains("uri"))return;
-    if(!map["uri"].toByteArray().contains("app.protocol.mouseevent"))return;
-    if(!map.contains("type"))return;
+    if(!map["uri"].toByteArray().contains(_protocolID.toLatin1()))return;
+    qDebug()<<map;
     QByteArray type=map["type"].toByteArray();
     int x=map["x"].toInt();
     int y=map["y"].toInt();
@@ -60,5 +60,5 @@ void CMouseProtocol::Process(const QVariantMap &map){
         CApplication*app=v.value<CApplication*>();
         QApplication::sendEvent(app->view(),&e);
     }
-    CAppProtocol::Process(map);
+//    CAppProtocol::Process(map);
 }

@@ -1,17 +1,12 @@
+
 window.onload = function () {
-    document.body.style.padding = '0';
-    document.body.style.margin = '0';
     const divRenderer = document.createElement('canvas');
     document.body.appendChild(divRenderer);
-
-    divRenderer.style.position = 'relative';
-    divRenderer.style.width = "100%";
-    divRenderer.style.height = "100%";
-    divRenderer.style.overflow = 'hidden';
 
     var baseUrl = "ws://localhost:8888";
     console.log("Connecting to WebSocket server at " + baseUrl + ".");
     var socket = new WebSocket(baseUrl);
+    socket.binaryType = "blob";
     socket.onclose = function () {
         console.error("web channel closed");
     };
@@ -22,15 +17,26 @@ window.onload = function () {
         console.log("WebSocket connected, setting up QWebChannel.");
     }
     socket.onmessage = function (ev) {
-        //var obj = JSON.parse(ev.data);
-        console.log("onmessage: ", ev.data);
-        var obj = JSON.parse(ev.data);
-        if (obj.format === "png") {
-            var imguri = "data:image/png;base64," + obj.data;
-            var img = new Image();
-            img.src = imguri;
-            var ctx = divRenderer.getContext('2d');
-            ctx.drawImage(img, 0, 0);
+        if (ev.data instanceof Blob) {
+            var reader = new FileReader();
+            reader.onload = () => {                
+                var img = new Image();
+                img.src = reader.result;
+                var ctx = divRenderer.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+            };
+            reader.readAsDataURL(ev.data);
+        }
+        else {
+            console.log("onmessage: ", ev.data);
+            var obj = JSON.parse(ev.data);
+            if (obj.format === "png") {
+                var imguri = "data:image/png;base64," + obj.data;
+                var img = new Image();
+                img.src = imguri;
+                var ctx = divRenderer.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+            }
         }
     }
     function sendJson(obj) {
@@ -40,7 +46,7 @@ window.onload = function () {
     window.onmousedown = function (ev) {
 
         var content = {
-            "uri": "app.protocol.mouseevent",
+            "uri": "app.protocol.mouse",
             "type": "mousedown",
             "button": ev.button,
             "buttons": ev.buttons,
@@ -53,7 +59,7 @@ window.onload = function () {
     }
     window.onmousemove = function (ev) {
         var content = {
-            "uri": "app.protocol.mouseevent",
+            "uri": "app.protocol.mouse",
             "type": "mousemove",
             "button": ev.button,
             "buttons": ev.buttons,
@@ -62,11 +68,11 @@ window.onload = function () {
             "modifys": ev.modifys,
         };
         //console.log("onmousemove ",content);
-        //sendJson(content);
+        sendJson(content);
     }
     window.onmouseup = function (ev) {
         var content = {
-            "uri": "app.protocol.mouseevent",
+            "uri": "app.protocol.mouse",
             "type": "mouseup",
             "button": ev.button,
             "buttons": ev.buttons,
@@ -80,7 +86,7 @@ window.onload = function () {
     window.onwheel = function (ev) {
 
         var content = {
-            "uri": "app.protocol.mouseevent",
+            "uri": "app.protocol.mouse",
             "type": "mousewheel",
             "buttons": ev.buttons,
             "x": ev.x,
@@ -91,13 +97,31 @@ window.onload = function () {
         console.log("onmousewheel ", ev);
         sendJson(content);
     }
-    window.onresize = function (ev) {
+
+    window.onresize=function(ev) {
+
+        var w = document.documentElement.clientWidth;
+        var h = document.documentElement.clientHeight;
         var content = {
-            "uri": "app.protocol.resizeevent",
-            "width": window.innerWidth,
-            "height": window.innerHeight,
+            "uri": "app.protocol.resize",
+            "width": w,
+            "height": h,
         };
-        console.log("onmousewheel ", window.innerWidth, window.innerHeight);
+        console.log("onmousewheel ", w, h);
         sendJson(content);
     }
+    var cnt = 0;
+    function animate() {
+        requestAnimationFrame(animate);
+        if (cnt < 50) {
+            cnt++;
+            return;
+        }
+        cnt = 0;
+        var content = {
+            "uri": "app.protocol.draw",
+        };
+        sendJson(content);
+    }
+    animate();
 }

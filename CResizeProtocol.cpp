@@ -5,7 +5,9 @@
 void CResizeProtocol::Process(const QVariantMap &map)
 {
     if(!map.contains("uri"))return;
-    if(!map["uri"].toByteArray().contains("app.protocol.resizeevent"))return;
+    if(!map["uri"].toByteArray().contains(_protocolID.toLatin1()))return;
+
+    qDebug()<<map;
     int w=map["width"].toInt();
     int h=map["height"].toInt();
     QVariant v=getSharedObject("app");
@@ -13,5 +15,5 @@ void CResizeProtocol::Process(const QVariantMap &map)
 
     QResizeEvent e(QSize(w,h),app->view()->size());
     QApplication::sendEvent(app->view(),&e);
-    CAppProtocol::Process(map);
+//    CAppProtocol::Process(map);
 }

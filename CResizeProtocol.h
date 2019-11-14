@@ -8,6 +8,7 @@ class CResizeProtocol : public CAppProtocol
 {
     Q_OBJECT
 public:
+    CResizeProtocol(){_protocolID="app.protocol.resize";}
     virtual void Process(const QVariantMap&map);
 signals:
 
