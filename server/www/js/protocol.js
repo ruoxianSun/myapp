@@ -1,6 +1,6 @@
 
 window.onload = function () {
-    const divRenderer = document.createElement('canvas');
+    const divRenderer = document.createElement('image');
     document.body.appendChild(divRenderer);
 
     var baseUrl = "ws://localhost:8888";
@@ -19,11 +19,12 @@ window.onload = function () {
     socket.onmessage = function (ev) {
         if (ev.data instanceof Blob) {
             var reader = new FileReader();
-            reader.onload = () => {                
-                var img = new Image();
-                img.src = reader.result;
-                var ctx = divRenderer.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+            reader.onload = () => {
+                divRenderer.src = reader.result;
+                //var img = new Image();
+                //img.src = reader.result;
+                //var ctx = divRenderer.getContext('2d');
+                //ctx.drawImage(img, 0, 0);
             };
             reader.readAsDataURL(ev.data);
         }
@@ -32,10 +33,11 @@ window.onload = function () {
             var obj = JSON.parse(ev.data);
             if (obj.format === "png") {
                 var imguri = "data:image/png;base64," + obj.data;
-                var img = new Image();
-                img.src = imguri;
-                var ctx = divRenderer.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+                divRenderer.src = imguri;
+                //var img = new Image();
+                //img.src = imguri;
+                //var ctx = divRenderer.getContext('2d');
+                //ctx.drawImage(img, 0, 0);
             }
         }
     }
@@ -113,7 +115,7 @@ window.onload = function () {
     var cnt = 0;
     function animate() {
         requestAnimationFrame(animate);
-        if (cnt < 50) {
+        if (cnt < 5) {
             cnt++;
             return;
         }
