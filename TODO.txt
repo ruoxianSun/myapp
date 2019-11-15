@@ -7,7 +7,7 @@ todo:
 4、css通过js进行设置；
 5、后台GUI框架化，方便直接二次开发；
 6、试验能否压缩数据，加快图像传输显示的速度；
-
+7、ws转wss
 done:
 1、websocket通信交换格式从json修改为blob; FileReader.readAsDataUrl(BlobData)可以直接将Blob格式封装成能赋值给image.src的格式;
 2、css可以实现精确的内容布局
