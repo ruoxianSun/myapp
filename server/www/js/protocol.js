@@ -112,6 +112,7 @@ window.onload = function () {
         console.log("onmousewheel ", w, h);
         sendJson(content);
     }
+    window.oncontextmenu = function (ev) { return false; }
     var cnt = 0;
     function animate() {
         requestAnimationFrame(animate);
