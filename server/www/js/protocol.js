@@ -1,7 +1,13 @@
 
 window.onload = function () {
-    const divRenderer = document.createElement('image');
-    document.body.appendChild(divRenderer);
+    const div = document.createElement('image');
+    document.body.appendChild(div);
+    document.body.style.padding = 0;
+    document.body.style.margin = 0;
+    div.style.width = "100 %";
+    div.style.height = "100%";
+    div.style.position = "fixed";
+    div.style.overflowY = "scroll";
 
     var baseUrl = "ws://localhost:8888";
     console.log("Connecting to WebSocket server at " + baseUrl + ".");
@@ -20,11 +26,7 @@ window.onload = function () {
         if (ev.data instanceof Blob) {
             var reader = new FileReader();
             reader.onload = () => {
-                divRenderer.src = reader.result;
-                //var img = new Image();
-                //img.src = reader.result;
-                //var ctx = divRenderer.getContext('2d');
-                //ctx.drawImage(img, 0, 0);
+                div.src = reader.result;
             };
             reader.readAsDataURL(ev.data);
         }
@@ -32,12 +34,7 @@ window.onload = function () {
             console.log("onmessage: ", ev.data);
             var obj = JSON.parse(ev.data);
             if (obj.format === "png") {
-                var imguri = "data:image/png;base64," + obj.data;
-                divRenderer.src = imguri;
-                //var img = new Image();
-                //img.src = imguri;
-                //var ctx = divRenderer.getContext('2d');
-                //ctx.drawImage(img, 0, 0);
+                div.src = "data:image/png;base64," + obj.data;
             }
         }
     }
@@ -69,7 +66,6 @@ window.onload = function () {
             "y": ev.y,
             "modifys": ev.modifys,
         };
-        //console.log("onmousemove ",content);
         sendJson(content);
     }
     window.onmouseup = function (ev) {
