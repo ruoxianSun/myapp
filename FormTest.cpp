@@ -22,7 +22,7 @@ void FormTest::paintEvent(QPaintEvent *e)
 
 void FormTest::mousePressEvent(QMouseEvent *e)
 {
-    if(e->button()==Qt::LeftButton)
+    if(e->buttons()&Qt::LeftButton)
     {
         _pressPos=e->globalPos()-frameGeometry().topLeft();
     }

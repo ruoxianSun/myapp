@@ -53,6 +53,7 @@ void CMouseProtocol::Process(const QVariantMap &map){
                       (Qt::MouseButton)button,
                       (Qt::MouseButtons)buttons,
                       (Qt::KeyboardModifier)modifys);
+        qDebug()<<map;
         QApplication::sendEvent(child,&e);
     }
     else if(type=="mousewheel")

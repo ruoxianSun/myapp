@@ -1,7 +1,13 @@
 
 window.onload = function () {
-    const divRenderer = document.createElement('image');
-    document.body.appendChild(divRenderer);
+    const div = document.createElement('image');
+    document.body.appendChild(div);
+    document.body.style.padding = 0;
+    document.body.style.margin = 0;
+    div.style.width = "100 %";
+    div.style.height = "100%";
+    div.style.position = "fixed";
+    div.style.overflowY = "scroll";
 
     var baseUrl = "ws://localhost:8888";
     console.log("Connecting to WebSocket server at " + baseUrl + ".");
@@ -20,7 +26,7 @@ window.onload = function () {
         if (ev.data instanceof Blob) {
             var reader = new FileReader();
             reader.onload = () => {
-                divRenderer.src = reader.result;
+                div.src = reader.result;
             };
             reader.readAsDataURL(ev.data);
         }
@@ -28,10 +34,10 @@ window.onload = function () {
             console.log("onmessage: ", ev.data);
             var obj = JSON.parse(ev.data);
             if (obj.format === "png") {
-                var imguri = "data:image/png;base64," + obj.data;
-                divRenderer.src = imguri;
+                div.src = "data:image/png;base64," + obj.data;
             }
         }
+    
     };
     function sendJson(obj) {
         var content = JSON.stringify(obj);
@@ -50,6 +56,7 @@ window.onload = function () {
         };
         console.log("onmousedown ", content);
         sendJson(content);
+    
     };
     window.onmousemove = function (ev) {
         var content = {
@@ -61,8 +68,8 @@ window.onload = function () {
             "y": ev.y,
             "modifys": ev.modifys,
         };
-        //console.log("onmousemove ",content);
         sendJson(content);
+    
     };
     window.onmouseup = function (ev) {
         var content = {
@@ -130,6 +137,8 @@ window.onload = function () {
         console.log("onkeyup ", content);
         sendJson(content);
     };
+    window.oncontextmenu = function (ev) { return false; };
+    window.ondragstart = function (ev) { return false; };
     var cnt = 0;
     function animate() {
         requestAnimationFrame(animate);
