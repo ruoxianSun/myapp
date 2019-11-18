@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPainter>
+#include <QVariantMap>
 namespace Ui {
 class Widget;
 }
@@ -25,9 +26,11 @@ protected:
     void mouseReleaseEvent(QMouseEvent*e);
     void mouseMoveEvent(QMouseEvent*e);
     void wheelEvent(QWheelEvent*e);
+    void keyPressEvent(QKeyEvent*e);
+    void keyReleaseEvent(QKeyEvent*e);
 private:
     Ui::Widget *ui;
-    QString info;
+    QVariantMap infos;
 };
 
 #endif // WIDGET_H

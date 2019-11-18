@@ -13,7 +13,7 @@ class CAppProtocol:public QObject
 {
     Q_OBJECT
 public:
-    CAppProtocol(){_protocolID="app.protocol.base";}
+    CAppProtocol(QObject*parent=0):QObject (parent){_protocolID="app.protocol.base";}
     virtual void Process(const QVariantMap&map);
     virtual QVariant getSharedObject(const QString&key);
 protected:

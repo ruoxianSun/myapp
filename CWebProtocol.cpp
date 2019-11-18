@@ -1,10 +1,13 @@
 #include "CWebProtocol.h"
 #include <QApplication>
+
+#include "CMouseProtocol.h"
+#include "CResizeProtocol.h"
+#include "CDrawProtocol.h"
+#include "CKeyProtocol.h"
+
+
 CApplication*CWebProtocol::_app=0;
-
-
-
-
 
 CWebProtocol::CWebProtocol(QObject *parent) :
     QObject(parent),
@@ -17,6 +20,7 @@ CWebProtocol::CWebProtocol(QObject *parent) :
     registerAppProtocol(new CDrawProtocol);
     registerAppProtocol(new CMouseProtocol);
     registerAppProtocol(new CResizeProtocol);
+    registerAppProtocol(new CKeyProtocol);
 }
 
 CWebProtocol::~CWebProtocol()

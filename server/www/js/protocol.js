@@ -15,16 +15,12 @@ window.onload = function () {
     };
     socket.onopen = function () {
         console.log("WebSocket connected, setting up QWebChannel.");
-    }
+    };
     socket.onmessage = function (ev) {
         if (ev.data instanceof Blob) {
             var reader = new FileReader();
             reader.onload = () => {
                 divRenderer.src = reader.result;
-                //var img = new Image();
-                //img.src = reader.result;
-                //var ctx = divRenderer.getContext('2d');
-                //ctx.drawImage(img, 0, 0);
             };
             reader.readAsDataURL(ev.data);
         }
@@ -34,13 +30,9 @@ window.onload = function () {
             if (obj.format === "png") {
                 var imguri = "data:image/png;base64," + obj.data;
                 divRenderer.src = imguri;
-                //var img = new Image();
-                //img.src = imguri;
-                //var ctx = divRenderer.getContext('2d');
-                //ctx.drawImage(img, 0, 0);
             }
         }
-    }
+    };
     function sendJson(obj) {
         var content = JSON.stringify(obj);
         socket.send(content);
@@ -58,7 +50,7 @@ window.onload = function () {
         };
         console.log("onmousedown ", content);
         sendJson(content);
-    }
+    };
     window.onmousemove = function (ev) {
         var content = {
             "uri": "app.protocol.mouse",
@@ -71,7 +63,7 @@ window.onload = function () {
         };
         //console.log("onmousemove ",content);
         sendJson(content);
-    }
+    };
     window.onmouseup = function (ev) {
         var content = {
             "uri": "app.protocol.mouse",
@@ -84,7 +76,7 @@ window.onload = function () {
         };
         //console.log("onmouseup ",content);
         sendJson(content);
-    }
+    };
     window.onwheel = function (ev) {
 
         var content = {
@@ -98,9 +90,9 @@ window.onload = function () {
         };
         console.log("onmousewheel ", ev);
         sendJson(content);
-    }
+    };
 
-    window.onresize=function(ev) {
+    window.onresize = function (ev) {
 
         var w = document.documentElement.clientWidth;
         var h = document.documentElement.clientHeight;
@@ -111,7 +103,33 @@ window.onload = function () {
         };
         console.log("onmousewheel ", w, h);
         sendJson(content);
-    }
+    };
+    window.onkeydown = function (ev) {
+        var content = {
+            "uri": "app.protocol.key",
+            "type": "down",
+            "code": ev.keyCode,
+            "char": ev.charCode,
+            "ctrl": ev.ctrlKey,
+            "alt": ev.altKey,
+            "shift":ev.shiftKey,
+        };
+        console.log("onkeydown ", content);
+        sendJson(content);
+    };
+    window.onkeyup = function (ev) {
+        var content = {
+            "uri": "app.protocol.key",
+            "type": "up",
+            "code": ev.keyCode,
+            "char": ev.charCode,
+            "ctrl": ev.ctrlKey,
+            "alt": ev.altKey,
+            "shift": ev.shiftKey,
+        };
+        console.log("onkeyup ", content);
+        sendJson(content);
+    };
     var cnt = 0;
     function animate() {
         requestAnimationFrame(animate);
@@ -124,6 +142,6 @@ window.onload = function () {
             "uri": "app.protocol.draw",
         };
         sendJson(content);
-    }
+    };
     animate();
 }

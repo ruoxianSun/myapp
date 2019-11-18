@@ -28,11 +28,13 @@ SOURCES += \
         CAppProtocol.cpp \
         CApplication.cpp \
         CDrawProtocol.cpp \
+        CKeyProtocol.cpp \
         CMouseProtocol.cpp \
         CResizeProtocol.cpp \
         CTest.cpp \
         CWebProtocol.cpp \
         CWebServer.cpp \
+        FormTest.cpp \
         main.cpp \
         Widget.cpp
 
@@ -40,14 +42,17 @@ HEADERS += \
         CAppProtocol.h \
         CApplication.h \
         CDrawProtocol.h \
+        CKeyProtocol.h \
         CMouseProtocol.h \
         CResizeProtocol.h \
         CTest.h \
         CWebProtocol.h \
         CWebServer.h \
+        FormTest.h \
         Widget.h
 
 FORMS += \
+        FormTest.ui \
         Widget.ui
 
 # Default rules for deployment.

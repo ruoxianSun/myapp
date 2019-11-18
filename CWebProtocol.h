@@ -9,9 +9,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "CMouseProtocol.h"
-#include "CResizeProtocol.h"
-#include "CDrawProtocol.h"
+#include "CAppProtocol.h"
 class CWebProtocol : public QObject
 {
     Q_OBJECT
